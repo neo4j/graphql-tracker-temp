@@ -4,7 +4,7 @@ This is an introduction to the Neo4j GraphQL mapping library (@neo4j/graphql). I
 
 ## Requirements
 
-@neo4j/graphql 0.0.x at minimum, requires:
+@neo4j/graphql 1.0.x at minimum, requires:
 
 -   [Neo4j](https://neo4j.com/) Database 4.1.0 and above.
 
@@ -85,10 +85,6 @@ type Post
 
 Features we have chosen to exclude for the first version of @neo4j/graphql.
 
-#### Spatial Types
-
-Although the power Spatial types expose... We have chosen to exclude support for them in the first version.
-
 #### Relationship Properties
 
 We found the existing implementation [here](https://grandstack.io/docs/graphql-relationship-types/), where you have to use the 'top-level' relation directive;
@@ -127,9 +123,8 @@ Similar to the reasons states in the Top Level Unions... we found that adding mu
 #### Further Excluded Features
 
 1. Multiple Databases
-2. additionalLabels
-3. GraphQL Architect
-4. Excluding Types and Relationships
-5. Indexes and Constraints
-6. Inferring a Schema
-7. Federation Support - We found federation very specific to Apollo users & not beneficial for our greater audience
+1. Additional Labels
+1. GraphQL Architect
+1. Indexes and Constraints
+1. Inferring a Schema
+1. Federation Support - We found federation very specific to Apollo users & not beneficial for our greater audience
