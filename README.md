@@ -4,9 +4,9 @@
 
 A GraphQL to Cypher query execution layer for Neo4j and JavaScript GraphQL implementations.
 
-1. [Introduction](./introduction.md)
-2. [Reference](./reference.md)
-3. [Contributing](./contributing.md)
+1. [Introduction](./introduction.adoc)
+2. [Reference](./reference.adoc)
+3. [Contributing](./contributing.adoc)
 
 ## Installation
 
@@ -79,7 +79,9 @@ mutation {
     createMovies(
         input: [{ title: "The Matrix", year: 1999, imdbRating: 8.7 }]
     ) {
-        title
+        movies {
+            title
+        }
     }
 }
 ```
@@ -94,7 +96,9 @@ mutation {
             genres: { where: { OR: [{ name: "Sci-fi" }, { name: "Action" }] } }
         }
     ) {
-        title
+        movies {
+            title
+        }
     }
 }
 ```
@@ -115,7 +119,9 @@ mutation {
             }
         ]
     ) {
-        title
+        movies {
+            title
+        }
     }
 }
 ```
@@ -124,7 +130,7 @@ mutation {
 
 ```graphql
 query {
-    Movies {
+    movies {
         title
         genres {
             name
