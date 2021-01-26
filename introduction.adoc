@@ -7,7 +7,7 @@ If you are already familiar with @neo4j/graphql, feel free to jump directly to <
 
 == Requirements
 
-@neo4j/graphql 0.0.x at minimum, requires:
+@neo4j/graphql 1.0.x at minimum, requires:
 
 -   [Neo4j](https://neo4j.com/) Database 4.1.0 and above.
 
@@ -140,9 +140,8 @@ Similar to the reasons states in the Top Level Unions... we found that adding mu
 
 Further Excluded Features::
 1. Multiple Databases
-2. additionalLabels
-3. GraphQL Architect
-4. Excluding Types and Relationships
-5. Indexes and Constraints
-6. Inferring a Schema
-7. Federation Support - We found federation very specific to Apollo users & not beneficial for our greater audience
+1. Additional Labels
+1. GraphQL Architect
+1. Indexes and Constraints
+1. Inferring a Schema
+1. Federation Support - We found federation very specific to Apollo users & not beneficial for our greater audience
