@@ -14,10 +14,10 @@ A GraphQL to Cypher query execution layer for Neo4j and JavaScript GraphQL imple
 $ npm install @neo4j/graphql
 ```
 
-⚠ `graphql` is a **peerDependency**
+⚠ `graphql` & `neo4j-driver` are **peerDependency**(s)
 
 ```
-$ npm install graphql
+$ npm install graphql neo4j-driver
 ```
 
 ## Quick Start
@@ -25,7 +25,7 @@ $ npm install graphql
 Import libraries using either `import`:
 
 ```js
-import { makeAugmentedSchema } from "@neo4j/graphql";
+import { Neo4jGraphQL } from "@neo4j/graphql";
 import * as neo4j from "neo4j-driver";
 import { ApolloServer } from "apollo-server";
 ```
@@ -33,7 +33,7 @@ import { ApolloServer } from "apollo-server";
 Or `require`:
 
 ```js
-const { makeAugmentedSchema } = require("@neo4j/graphql");
+const { Neo4jGraphQL } = require("@neo4j/graphql");
 const neo4j = require("neo4j-driver");
 const { ApolloServer } = require("apollo-server");
 ```
@@ -55,7 +55,7 @@ const typeDefs = `
     }
 `;
 
-const neoSchema = makeAugmentedSchema({ typeDefs });
+const neoSchema = new Neo4jGraphQL({ typeDefs });
 
 const driver = neo4j.driver(
     "bolt://localhost:7687",
@@ -184,9 +184,9 @@ await Movie.create({
 });
 ```
 
-## Complex Auth
+## Auth
 
-Define complex, nested & related, authorization rules such as; “grant update access to all moderators of a post”;
+Define, nested & related, authorization rules such as; “grant update access to all moderators of a post”;
 
 ```graphql
 type User {
@@ -194,17 +194,61 @@ type User {
     username: String!
 }
 
-type Post
-    @auth(
-        rules: [
-            {
-                allow: [{ moderator: { id: "sub" } }] # "sub" being "req.jwt.sub"
-                operations: ["update"]
-            }
-        ]
-    ) {
+type Post {
     id: ID!
     title: String!
     moderator: User @relationship(type: "MODERATES_POST", direction: "IN")
+}
+
+extend type Post
+    @auth(
+        rules: [
+            {
+                allow: [{ moderator: { id: "$jwt.sub" } }]
+                operations: ["update"]
+            }
+        ]
+    )
+```
+
+Specify rules on fields;
+
+```graphql
+type User {
+    id: ID!
+    username: String!
+}
+
+extend type User {
+    password: String!
+        @auth(
+            rules: [
+                {
+                    OR: [{ allow: { id: "$jwt.sub" } }, { roles: ["admin"] }]
+                    operations: "*"
+                }
+            ]
+        )
+}
+```
+
+Use RBAC;
+
+```graphql
+type CatalogItem @auth(rules: [{ operations: "read", roles: "read:catalog" }]) {
+    id: ID
+    title: String
+}
+
+type Customer @auth(rules: [{ operations: "read", roles: "read:customer" }]) {
+    id: ID
+    name: String
+    password: String @auth(rules: [{ operations: "read", roles: "admin" }])
+}
+
+type Invoice @auth(rules: [{ operations: "read", roles: "read:invoice" }]) {
+    id: ID
+    csv: String
+    total: Int
 }
 ```
