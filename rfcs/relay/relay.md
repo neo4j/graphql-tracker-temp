@@ -10,7 +10,7 @@ A Relay implementation will address both of these concerns.
 
 ### Type definitions
 
-Relationship definitions on the nodes also point to a properties type on either end
+Relationship definitions on the nodes also point to a properties interface on either end
 
 ```graphql
 type Movie @node {
@@ -19,29 +19,28 @@ type Movie @node {
     @relationship(type: "ACTED_IN", properties: ActedIn, direction: "IN")
 }
 
-type Actor @node(id: "_id") {
+type Actor {
+  id: ID! @id(property: "_id", autogenerate: false)
   name: String!
   movies: [Movie!]!
     @relationship(type: "ACTED_IN", properties: ActedIn, direction: "OUT")
 }
 
-type ActedIn @properties {
+interface ActedIn {
   screenTime: Int!
 }
 ```
 
 #### Notes
 
-- Much like node types, property types can be named however users see fit. If the same relationship type can be used for different node combinations, they can name them differently to distinguish between them.
-- As we are now introducing more potential types to the type definitions, we need to be able to distinguish between what is a node type and what is not.
-  - The `@node` directive on node types will be mandatory, which will also allow us to easily implement a `Node` interface for Relay implementation. An argument can be added to this directive to instruct the library to save the ID under a different field in the database: `@node(id: "_id")`
-  - Relationship property types will be decorated with the `@properties` directive.
-- All of this functionality will be opt in on `Neo4jGraphQL` construction. A `boolean` argument `relay` will be passed in with the type definitions. If `false` and any of the following are used in the type definitions, an error will be thrown:
-  - `@node` directive
-  - `@properties` directive
-  - `properties` argument in the `@relationship` directive
+- Much like node types, property interfaces can be named however users see fit. If the same relationship type can be used for different node combinations, they can name them differently to distinguish between them.
+- As per the current implementation, all types will be assumed to be node types and will have the relevant queries and mutations generated for them.
+- All nodes types will automatically have a field `id` of type `ID!` added to them, and this will be fully managed by `@neo4j/graphql`, mapped to a property `id` in each Neo4j node. Users can specify the `id` field themselves with an `@id` directive as per the example above if they wish for it to be mapped to a different property or wish to manage the ID themselves.
+- All of this functionality will be opt in on `Neo4jGraphQL` construction. A `boolean` argument `relay` will be passed in with the type definitions.
 - Furthermore, if the `boolean` argument `relay` is `true` and any of the following are used in the type definitions, an error will be thrown:
-  - A field with name `id` in a type decorated with `@node`
+  - A field with name `id` which does not have the type `ID!` in any type
+  - A `@relationship` directive "pair" where the `properties` argument does not have the same value in each directive
+  - The `@id` directive used against any field other than `id` with type `ID!`
 
 ### Schema changes
 
@@ -79,23 +78,23 @@ type Movie implements Node {
 
 #### New types for relationship properties and relationships
 
-Relationship types are automatically generated, one for each direction of a relationship. They are synonymous with the Relay concept of edges, with a string field `cursor` and a field `node` which is the type at the other end of the relationship. The `properties` field will be of the type referenced in the `@relationship` directive.
+Relationship types are automatically generated, one for each direction of a relationship. They are synonymous with the Relay concept of edges, with a string field `cursor` and a field `node` which is the type at the other end of the relationship. The remaining fields will be from the properties interface which was specified in the `@relationship` directive, and the relationship type will implement that interface.
 
 ```graphql
-type ActedIn {
+interface ActedIn {
   screenTime: Int!
 }
 
-type ActorMovieRelationship {
+type ActorMovieRelationship implements ActedIn {
   cursor: String!
-  properties: ActedIn!
   node: Movie!
+  screenTime: Int!
 }
 
-type MovieActorRelationship {
+type MovieActorRelationship implements ActedIn {
   cursor: String!
-  properties: ActedIn!
   node: Actor!
+  screenTime: Int!
 }
 ```
 
@@ -251,12 +250,10 @@ mutation CreateMovieAndActor(
       title
       actorsConnection {
         edges {
-          properties {
-            screenTime
-          }
           node {
             name
           }
+          screenTime
         }
       }
     }
@@ -286,12 +283,10 @@ mutation CreateMovieAndConnectActor(
       title
       actorsConnection {
         edges {
-          properties {
-            screenTime
-          }
           node {
             name
           }
+          screenTime
         }
       }
     }
@@ -317,12 +312,10 @@ mutation UpdateScreenTime($title: String, $name: String, $screenTime: Int) {
       title
       actorsConnection {
         edges {
-          properties {
-            screenTime
-          }
           node {
             name
           }
+          screenTime
         }
       }
     }

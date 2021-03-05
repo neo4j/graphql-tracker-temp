@@ -21,20 +21,20 @@ type Movie implements Node {
   actorsConnection(first: Int, after: String): MovieActorsConnection!
 }
 
-type ActedIn {
+interface ActedIn {
   screenTime: Int!
 }
 
-type ActorMovieRelationship {
+type ActorMovieRelationship implements ActedIn {
   cursor: String!
-  properties: ActedIn!
   node: Movie!
+  screenTime: Int!
 }
 
-type MovieActorRelationship {
+type MovieActorRelationship implements ActedIn {
   cursor: String!
-  properties: ActedIn!
   node: Actor!
+  screenTime: Int!
 }
 
 type PageInfo {
