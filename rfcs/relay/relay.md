@@ -16,14 +16,14 @@ Relationship definitions on the nodes also point to a properties interface on ei
 type Movie @node {
   title: String!
   actors: [Actor!]!
-    @relationship(type: "ACTED_IN", properties: ActedIn, direction: "IN")
+    @relationship(type: "ACTED_IN", properties: "ActedIn", direction: "IN")
 }
 
 type Actor {
   id: ID! @id(property: "_id", autogenerate: false)
   name: String!
   movies: [Movie!]!
-    @relationship(type: "ACTED_IN", properties: ActedIn, direction: "OUT")
+    @relationship(type: "ACTED_IN", properties: "ActedIn", direction: "OUT")
 }
 
 interface ActedIn {
