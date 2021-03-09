@@ -77,12 +77,12 @@ input ActorWhere {
   name_ENDS_WITH: String
   name_NOT_ENDS_WITH: String
   name_MATCHES: String
-  OR: [ActorWhere]
-  AND: [ActorWhere]
+  OR: [ActorWhere!]
+  AND: [ActorWhere!]
   actors: ActorWhere
   actors_NOT: ActorWhere
-  actors_IN: [ActorWhere]
-  actors_NOT_IN: [ActorWhere]
+  actors_IN: [ActorWhere!]
+  actors_NOT_IN: [ActorWhere!]
 }
 
 enum ActorSort {
@@ -121,12 +121,12 @@ input MovieWhere {
   title_ENDS_WITH: String
   title_NOT_ENDS_WITH: String
   title_MATCHES: String
-  OR: [MovieWhere]
-  AND: [MovieWhere]
+  OR: [MovieWhere!]
+  AND: [MovieWhere!]
   actors: ActorWhere
   actors_NOT: ActorWhere
-  actors_IN: [ActorWhere]
-  actors_NOT_IN: [ActorWhere]
+  actors_IN: [ActorWhere!]
+  actors_NOT_IN: [ActorWhere!]
 }
 
 enum MovieSort {
@@ -148,7 +148,7 @@ input ActorMoviesDeleteInput {
 }
 
 input ActorDeleteInput {
-  movies: [ActorMoviesDeleteInput]
+  movies: [ActorMoviesDeleteInput!]
 }
 
 input ActorDeleteFieldInput {
@@ -162,7 +162,7 @@ input ActorDisconnectFieldInput {
 }
 
 input ActorDisconnectInput {
-  movies: [MovieDisconnectFieldInput]
+  movies: [MovieDisconnectFieldInput!]
 }
 
 input MovieActorsDeleteInput {
@@ -171,7 +171,7 @@ input MovieActorsDeleteInput {
 }
 
 input MovieDeleteInput {
-  actors: [MovieActorsDeleteInput]
+  actors: [MovieActorsDeleteInput!]
 }
 
 input MovieDeleteFieldInput {
@@ -185,7 +185,7 @@ input MovieDisconnectFieldInput {
 }
 
 input MovieDisconnectInput {
-  actors: [ActorDisconnectFieldInput]
+  actors: [ActorDisconnectFieldInput!]
 }
 
 input ActedInCreateInput {
@@ -208,8 +208,8 @@ input ActorMovieCreateInput {
 }
 
 input ActorMoviesFieldInput {
-  create: [ActorMovieCreateInput]
-  connect: [MovieConnectFieldInput]
+  create: [ActorMovieCreateInput!]
+  connect: [MovieConnectFieldInput!]
 }
 
 input ActorConnectFieldInput {
@@ -219,7 +219,7 @@ input ActorConnectFieldInput {
 }
 
 input ActorConnectInput {
-  movies: [MovieConnectFieldInput]
+  movies: [MovieConnectFieldInput!]
 }
 
 input MovieCreateInput {
@@ -233,8 +233,8 @@ input MovieActorCreateInput {
 }
 
 input MovieActorsFieldInput {
-  create: [MovieActorCreateInput]
-  connect: [ActorConnectFieldInput]
+  create: [MovieActorCreateInput!]
+  connect: [ActorConnectFieldInput!]
 }
 
 input MovieConnectFieldInput {
@@ -244,46 +244,46 @@ input MovieConnectFieldInput {
 }
 
 input MovieConnectInput {
-  actors: [ActorConnectFieldInput]
+  actors: [ActorConnectFieldInput!]
 }
 
 input ActorMoviesUpdateFieldInput {
   where: MovieWhere
   update: MovieUpdateInput
-  create: [ActorMovieCreateInput]
-  connect: [MovieConnectFieldInput]
-  disconnect: [MovieDisconnectFieldInput]
-  delete: [MovieDeleteFieldInput]
-  updateConnection: [MovieUpdateConnectionFieldInput]
+  create: [ActorMovieCreateInput!]
+  connect: [MovieConnectFieldInput!]
+  disconnect: [MovieDisconnectFieldInput!]
+  delete: [MovieDeleteFieldInput!]
+  updateConnection: [MovieUpdateConnectionFieldInput!]
 }
 
 input ActorUpdateInput {
   id: ID
   name: String
-  movies: [ActorMoviesUpdateFieldInput]
+  movies: [ActorMoviesUpdateFieldInput!]
 }
 
 input MovieActorsUpdateFieldInput {
   where: ActorWhere
   update: ActorUpdateInput
-  create: [MovieActorCreateInput]
-  connect: [ActorConnectFieldInput]
-  disconnect: [ActorDisconnectFieldInput]
-  delete: [ActorDeleteFieldInput]
-  updateConnection: [ActorUpdateConnectionFieldInput]
+  create: [MovieActorCreateInput!]
+  connect: [ActorConnectFieldInput!]
+  disconnect: [ActorDisconnectFieldInput!]
+  delete: [ActorDeleteFieldInput!]
+  updateConnection: [ActorUpdateConnectionFieldInput!]
 }
 
 input MovieUpdateInput {
   title: String
-  actors: [MovieActorsUpdateFieldInput]
+  actors: [MovieActorsUpdateFieldInput!]
 }
 
 input ActorRelationInput {
-  movies: [ActorMovieCreateInput]
+  movies: [ActorMovieCreateInput!]
 }
 
 input MovieRelationInput {
-  actors: [MovieActorCreateInput]
+  actors: [MovieActorCreateInput!]
 }
 
 input MovieUpdateConnectionFieldInput {
@@ -292,7 +292,7 @@ input MovieUpdateConnectionFieldInput {
 }
 
 input ActorUpdateConnectionInput {
-  movies: [MovieUpdateConnectionFieldInput]
+  movies: [MovieUpdateConnectionFieldInput!]
 }
 
 input ActorUpdateConnectionFieldInput {
@@ -301,7 +301,7 @@ input ActorUpdateConnectionFieldInput {
 }
 
 input MovieUpdateConnectionInput {
-  actors: [ActorUpdateConnectionFieldInput]
+  actors: [ActorUpdateConnectionFieldInput!]
 }
 
 type DeleteInfo {
@@ -332,7 +332,7 @@ type Query {
 }
 
 type Mutation {
-  createActors(input: [ActorCreateInput]!): CreateActorsMutationResponse!
+  createActors(input: [ActorCreateInput!]!): CreateActorsMutationResponse!
   deleteActors(where: ActorWhere, delete: ActorDeleteInput): DeleteInfo!
   updateActors(
     where: ActorWhere
@@ -343,7 +343,7 @@ type Mutation {
     delete: ActorDeleteInput
     updateConnection: ActorUpdateConnectionInput
   ): UpdateActorsMutationResponse!
-  createMovies(input: [MovieCreateInput]!): CreateMoviesMutationResponse!
+  createMovies(input: [MovieCreateInput!]!): CreateMoviesMutationResponse!
   deleteMovies(where: MovieWhere, delete: MovieDeleteInput): DeleteInfo!
   updateMovies(
     where: MovieWhere

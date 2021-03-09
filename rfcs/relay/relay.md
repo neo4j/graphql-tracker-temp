@@ -182,7 +182,7 @@ input MovieUpdateConnectionFieldInput {
 }
 
 input ActorUpdateConnectionInput {
-  movies: [MovieUpdateConnectionFieldInput]
+  movies: [MovieUpdateConnectionFieldInput!]
 }
 
 input ActorUpdateConnectionFieldInput {
@@ -191,17 +191,17 @@ input ActorUpdateConnectionFieldInput {
 }
 
 input MovieUpdateConnectionInput {
-  actors: [ActorUpdateConnectionFieldInput]
+  actors: [ActorUpdateConnectionFieldInput!]
 }
 
 input ActorMoviesUpdateFieldInput {
   ...
-  updateConnection: [MovieUpdateConnectionFieldInput]
+  updateConnection: [MovieUpdateConnectionFieldInput!]
 }
 
 input MovieActorsUpdateFieldInput {
   ...
-  updateConnection: [ActorUpdateConnectionFieldInput]
+  updateConnection: [ActorUpdateConnectionFieldInput!]
 }
 
 type Mutation {
