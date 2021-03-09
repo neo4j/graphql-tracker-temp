@@ -20,7 +20,7 @@ type Movie @node {
 }
 
 type Actor {
-  id: ID! @id(property: "_id", autogenerate: false)
+  id: ID! @property(name: "_id") @unmanaged
   name: String!
   movies: [Movie!]!
     @relationship(type: "ACTED_IN", properties: "ActedIn", direction: "OUT")
@@ -35,12 +35,12 @@ interface ActedIn {
 
 - Much like node types, property interfaces can be named however users see fit. If the same relationship type can be used for different node combinations, they can name them differently to distinguish between them.
 - As per the current implementation, all types will be assumed to be node types and will have the relevant queries and mutations generated for them.
-- All nodes types will automatically have a field `id` of type `ID!` added to them, and this will be fully managed by `@neo4j/graphql`, mapped to a property `id` in each Neo4j node. Users can specify the `id` field themselves with an `@id` directive as per the example above if they wish for it to be mapped to a different property or wish to manage the ID themselves.
+- All nodes types will automatically have a field `id` of type `ID!` added to them, and this will be fully managed by `@neo4j/graphql` and mapped to a property `id` in each Neo4j node. Users can specify the `id` field with a type `ID!` if they wish. It can be decorated with any combination of `@property` and `@unmanaged` to save to a different property name in Neo4j and/or allow the user to manage the setting of the ID, respectively.
 - All of this functionality will be opt in on `Neo4jGraphQL` construction. A `boolean` argument `relay` will be passed in with the type definitions.
 - Furthermore, if the `boolean` argument `relay` is `true` and any of the following are used in the type definitions, an error will be thrown:
   - A field with name `id` which does not have the type `ID!` in any type
   - A `@relationship` directive "pair" where the `properties` argument does not have the same value in each directive
-  - The `@id` directive used against any field other than `id` with type `ID!`
+  - The `@unmanaged` directive used against any field other than `id` with type `ID!`
 
 ### Schema changes
 
@@ -235,13 +235,17 @@ mutation CreateMovieAndActor(
   $title: String!
   $name: String!
   $screenTime: Int!
+  $id: ID!
 ) {
   createMovies(
     input: {
       title: $title
       actors: {
         create: [
-          { properties: { screenTime: $screenTime }, node: { name: $name } }
+          {
+            properties: { screenTime: $screenTime }
+            node: { id: $id, name: $name }
+          }
         ]
       }
     }

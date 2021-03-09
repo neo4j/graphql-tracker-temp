@@ -197,6 +197,7 @@ input ActedInUpdateInput {
 }
 
 input ActorCreateInput {
+  id: ID!
   name: String
   movies: ActorMoviesFieldInput
 }
@@ -257,6 +258,7 @@ input ActorMoviesUpdateFieldInput {
 }
 
 input ActorUpdateInput {
+  id: ID
   name: String
   movies: [ActorMoviesUpdateFieldInput]
 }
