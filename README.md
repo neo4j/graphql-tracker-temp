@@ -1,12 +1,14 @@
 # @neo4j/graphql
 
+[![npm version](https://badge.fury.io/js/%40neo4j%2Fgraphql.svg)](https://badge.fury.io/js/%40neo4j%2Fgraphql)
+
 > Alpha 🏗
 
 A GraphQL to Cypher query execution layer for Neo4j and JavaScript GraphQL implementations.
 
-1. [Introduction](./introduction.adoc)
-2. [Reference](./reference.adoc)
-3. [Contributing](./contributing.adoc)
+1. [Introduction](https://github.com/neo4j/graphql-tracker-temp/blob/master/introduction.adoc)
+2. [Reference](https://github.com/neo4j/graphql-tracker-temp/blob/master/reference.adoc)
+3. [Contributing](https://github.com/neo4j/graphql-tracker-temp/blob/master/contributing.adoc)
 
 ## Installation
 
